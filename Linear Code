@@ -1,3 +1,0 @@
-from sage.all import *
-
-G = matrix(GF(2), [[1,0,1],[0,1,0]]) 
