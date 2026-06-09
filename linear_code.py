@@ -15,11 +15,11 @@ G = matrix(M, [                # generator matrix απο το βιβλιιο (7,
             [1,0,1,1,0,0,1]
             ])
 
-def encode(m):
-  return vector(F, m) * G
+def encode(c):                # πολλαπλασιαζμός μηνύματος(c) με generator matrix
+  return vector(F, c) * G
 
-def error_syndrome(r):
-  return vector(F, r) * H
+def error_syndrome(r):        # r = c + e(error)
+   return vector(F, r) * H
 
 def build_error_syndrome_table():
   table = {}
