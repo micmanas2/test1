@@ -1,17 +1,13 @@
 import random
 
 def add_errors(codeword, error_percent):
-    """
-    Introduces random bit flips into a codeword.
-    error_percent: float between 0 and 1 (e.g. 0.1 = 10%)
-    """
+
     codeword = list(codeword)
     n = len(codeword)
+    num_errors =  int(n * error_percent))  # στρογγυλοποίηση προς τα κάτω 
     
-    num_errors = max(1, int(n * error_percent))  # at least 1 error
-    
-    # pick random unique positions to flip
-    error_positions = random.sample(range(n), min(num_errors, n))
+
+    error_positions = random.sample(range(n), min(num_errors, n)) # 
     
     for pos in error_positions:
         codeword[pos] = int(codeword[pos]) ^ 1   # flip bit with XOR
