@@ -37,7 +37,7 @@ def error_syndrome(r):        # πολλαπλασιαμός με πίνακα �
 
 def build_error_syndrome_table():
   table = {}
-  zero = vector(F, [0,0,0,0,0,0,0])
+  zero = vector(M, [0,0,0,0,0,0,0])
   table[tuple(error_syndrome(zero))] = zero # no error
   for i in range(7):
     e = [0,0,0,0,0,0,0]
