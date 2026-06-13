@@ -42,7 +42,7 @@ def build_error_syndrome_table():
   for i in range(7):
     e = [0,0,0,0,0,0,0]
     e[i] =  1
-    e = vector(F, e)
+    e = vector(Μ, e)
     table[tuple(error_syndrome(e))] = e
   return table    
 
