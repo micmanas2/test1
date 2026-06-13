@@ -16,13 +16,12 @@ def add_errors(codeword, error_percent):
     print(f"  Error positions: {error_positions}")
     return codeword
 
+
 for i, chunk in enumerate(chunks):
-    bits = [int(b) for b in chunk]
+    bits = [tuple(b) for b in chunk]
     codeword = encode(bits)
-    print(f"\nChunk {i}: {bits} → encoded: {list(codeword)}")
 
     # 10% error rate
     received = add_errors(codeword, error_percent=0.10)
     print(f"  Received: {received}")
-
-    decoded = decode(received)
+    decode(received)
