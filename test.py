@@ -12,10 +12,5 @@ for i, chunk in enumerate(chunks):
     codeword = encode(bits)
     print(f"Chunk {i}: {bits} → encoded: {list(codeword)}")
 
-    # Simulate a 1-bit error in position 2
-    received = list(codeword)
-    received[2] = int(received[2]) ^ 1
-    print(f"  Received (with error): {received}")
-
     decoded = decode(received)
     print()
