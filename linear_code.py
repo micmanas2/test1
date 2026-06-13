@@ -52,15 +52,15 @@ error_syndrome_table = build_error_syndrome_table()
 def decode(r):
   r = vector(M, r)
   s = tuple(error_syndrome(r))
-  if all (v == 0 for v in s):
+  if all (v == 0 for v in s):          # αν = 000 σημάινει οτι δεν έχει σφάλματα
     print("No errors")
     corrected = r
   elif s in error_syndrome_table:
-    corrected = r - error_syndrome_table[s]
+    corrected = r - error_syndrome_table[s]  # XOR
   else:
     print("Uncorrectable error")
     return None
 
-  message = list(corrected)[:4]
+  message = list(corrected)[:4]          # Παίρνουμε τα πρώτα 4 bits που είναι = αρχικό μήνυμα
   print(f"Decoded message: {message}")
   return message
