@@ -56,8 +56,7 @@ def decode(r):
     print(f"No errors")
     corrected = r
   elif s in error_syndrome_table:
-    e = error_syndrome_table[s]
-    corrected = r - e
+    corrected = r - error_syndrome_table[s]
   else:
     print(f"Uncorrectable error")
     return None
