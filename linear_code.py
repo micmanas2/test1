@@ -58,7 +58,7 @@ def decode(r):
   elif s in error_syndrome_table:
     corrected = r - error_syndrome_table[s]  # XOR
   else:
-    print("Uncorrectable error")
+    print("More than 1 errors. Can't be corrected")
     return None
 
   message = list(corrected)[:4]          # Παίρνουμε τα πρώτα 4 bits που είναι = αρχικό μήνυμα
