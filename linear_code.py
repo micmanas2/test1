@@ -13,25 +13,25 @@ M = GF(2)
 # 128 διαφορετικοί vectors(2^7)
 
 G = matrix(M, [                # generator matrix απο το βιβλιιο (7,4)
-          [1,0,0,0,1,1,1]
-          [0,1,0,0,1,1,0]
-          [0,0,1,0,1,0,1]
+          [1,0,0,0,1,1,1],
+          [0,1,0,0,1,1,0],
+          [0,0,1,0,1,0,1],
           [0,0,0,1,0,1,1]
           ])           
 
-Η =  matrix(M, [              # πίνακας ελέγχου από το βιβλίο (7,3)
+H =  matrix(M, [              # πίνακας ελέγχου από το βιβλίο (7,3)
             [1,1,1,0,1,0,0],
-            [1,1,0,1,0,1,0]
+            [1,1,0,1,0,1,0],
             [1,0,1,1,0,0,1]
             ])
 
 # Κάθε vector() ή tuple() αλλάζει τον τύπο τις μεταβλητής όπως χρειάζεται για να μπορέσουν να γίνουν οι πράξεις
 
 def encode(c):                # πολλαπλασιαζμός μηνύματος(c) με generator matrix
-  return vector(F, c) * G
+  return vector(M, c) * G
 
 def error_syndrome(r):        # πολλαπλασιαμός με πίνακα ελέγχου. r = c + e(error)
-   return vector(F, r) * H
+   return H * vector(M, r)
 
 # 128/16 = 8 σύμπλοκα
 
@@ -43,25 +43,25 @@ def build_error_syndrome_table():
     e = [0,0,0,0,0,0,0]
     e[i] =  1
     e = vector(F, e)
-    s = error_syndorme(e)
+    s = error_syndrome(e)
     table[tuple(s)] = e
   return table    
 
-error_syndrome_table = build_error_syndorme_table()
+error_syndrome_table = build_error_syndrome_table()
 
 
 def decode(r):
-  r = vector(F, r)
-  s = tuple(error_syndrome(s))
+  r = vector(M, r)
+  s = tuple(error_syndrome(r))
   if all (v == 0 for v in s):
     print(f"No errors")
     corrected = r
   elif s in error_syndrome_table:
-    e = error_syndrome_table(s)
+    e = error_syndrome_table[s]
     corrected = r - e
   else:
     print(f"Uncorrectable error")
-    return none
+    return None
 
   message = list(corrected)[:4]
   print(f"Decoded message: {message}")
