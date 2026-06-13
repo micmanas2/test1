@@ -53,12 +53,12 @@ def decode(r):
   r = vector(M, r)
   s = tuple(error_syndrome(r))
   if all (v == 0 for v in s):
-    print(f"No errors")
+    print("No errors")
     corrected = r
   elif s in error_syndrome_table:
     corrected = r - error_syndrome_table[s]
   else:
-    print(f"Uncorrectable error")
+    print("Uncorrectable error")
     return None
 
   message = list(corrected)[:4]
