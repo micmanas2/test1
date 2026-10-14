@@ -2,22 +2,9 @@ import random as rnd
 from sage.all import *
 import base64
 
-bint = "Hello World!"
 
 
-bint = bint.encode().hex()
-print(bint)
-
-to_bytes = int(bint,16) #απο hex σε bytes
-print(to_bytes)
-
-to_binary = bin(to_bytes)[2:] #να θυμαμαι να βγαζω το prefix
-print(to_binary)
-image = str(to_binary)
-print(image)
-
-
-codeword = "0011"
+codeword = "0011" # τα bits που θα παρω απο τον κωστα
 
 while len(codeword) % 4 != 0:     # padding
           codeword += "0"
@@ -26,8 +13,6 @@ chunks = [codeword[i:i+4] for i in range(0, len(codeword), 4)]   # split into ch
           
 M = GF(2)
 
-# 16 διαφορετικά μηνύματα(2^4)
-# 128 διαφορετικοί vectors(2^7)
 
 G = matrix(M, [                # generator matrix
           [1,0,0,0,1,1,0,1],
@@ -36,7 +21,7 @@ G = matrix(M, [                # generator matrix
           [0,0,0,1,1,1,1,0]
           ])           
 
-H = matrix(M, [
+H = matrix(M, [                # parity check matrix
           [1,1,0,1,1,0,0,0],
           [1,0,1,1,0,1,0,0],
           [0,1,1,1,0,0,1,0],
@@ -51,7 +36,6 @@ def encode(c):                # πολλαπλασιαζμός μηνύματο�
 def error_syndrome(r):        # πολλαπλασιαμός με πίνακα ελέγχου. r = c + e(error)
    return H * vector(M, r)
 
-# 128/16 = 8 σύμπλοκα
 
 def build_error_syndrome_table():
   table = {}
@@ -97,24 +81,29 @@ def add_error(codeword, percentage):
         received[pos] += 1
     return received
 
-
+# αυτο απλα κανει τους υπολογιζμους για να δω οτι δουλευει ο κωδικας.
+# θα γινουν αλλιως οι υπολοιησεις στο κανονικη εργασια
+###
 for i, chunk in enumerate(chunks):
     bits = [int(b[0]) for b in chunk]
     print(f"Before encoding {chunk}")
           
-    codeword = encode(bits) #generator matrix
+    codeword = encode(bits) #encode with generator matrix
     print(f"Codeword: {codeword}")
           
     received = add_error(codeword, 20) # add error
     
     encoded = base64.b64encode(received.encode("ascii")) #encode with base64
     print (f"Encoded with base64 {encoded}")
-    
+   ### λγκ τα παραπανω θα μπουν στη μερια του αποστολεα       
+          
+   ### και τα παρακατω στη μερια του παραληπτη. δν ειμαι και σιγουρος ομως :)
+          
     decoded = base64.b64decode(encoded).decode("ascii") #decode with base64
     print(f"Decoded with base64 {decoded}")
           
     print(received == encoded) 
     received = encoded
           
-    print(f"Received: {received}") #parity check matrix
+    print(f"Received: {received}") #decode with parity check matrix
     decode(received)
