@@ -3,8 +3,13 @@ from sage.all import *
 import base64
 
 
+#codeword = ("0011")
+codeword2 = ("0101010011011011")*5000 # τα bits που θα παρω απο τον κωστα
+original_length = len(codeword2)
+codeword = codeword2
 
-codeword = "0011" # τα bits που θα παρω απο τον κωστα
+
+
 
 while len(codeword) % 4 != 0:     # padding
           codeword += "0"
@@ -80,10 +85,11 @@ def add_error(codeword, percentage):
     for pos in positions:
         received[pos] += 1
     return received
-
+    
 # αυτο απλα κανει τους υπολογιζμους για να δω οτι δουλευει ο κωδικας.
 # θα γινουν αλλιως οι υπολοιησεις στο κανονικη εργασια
 ###
+reconstructed = ""
 for i, chunk in enumerate(chunks):
     bits = [int(b[0]) for b in chunk]
     print(f"Before encoding {chunk}")
@@ -93,17 +99,26 @@ for i, chunk in enumerate(chunks):
           
     received = add_error(codeword, 20) # add error
     
+    received = ''.join(str(int(b)) for b in received)
     encoded = base64.b64encode(received.encode("ascii")) #encode with base64
     print (f"Encoded with base64 {encoded}")
-   ### λγκ τα παραπανω θα μπουν στη μερια του αποστολεα       
-          
+    
+   ### λγκ τα παραπανω θα μπουν στη μερια του αποστολεα               
    ### και τα παρακατω στη μερια του παραληπτη. δν ειμαι και σιγουρος ομως :)
-          
+         
     decoded = base64.b64decode(encoded).decode("ascii") #decode with base64
     print(f"Decoded with base64 {decoded}")
           
-    print(received == encoded) 
-    received = encoded
           
-    print(f"Received: {received}") #decode with parity check matrix
-    decode(received)
+    print(f"Received: {decoded}") #decode with parity check matrix
+    og = decode(decoded)
+    og = ''.join(str(int(bit)) for bit in og)
+    print(og == chunk)
+    reconstructed += og
+     
+print("Final Result")
+print(reconstructed[:original_length] == codeword2)
+    
+    
+    
+    
