@@ -1,6 +1,20 @@
 import random as rnd
 from sage.all import *
+import base64
 
+bint = "Hello World!"
+
+
+bint = bint.encode().hex()
+print(bint)
+
+to_bytes = int(bint,16) #απο hex σε bytes
+print(to_bytes)
+
+to_binary = bin(to_bytes)[2:] #να θυμαμαι να βγαζω το prefix
+print(to_binary)
+image = str(to_binary)
+print(image)
 
 
 codeword = "0011"
@@ -11,6 +25,9 @@ while len(codeword) % 4 != 0:     # padding
 chunks = [codeword[i:i+4] for i in range(0, len(codeword), 4)]   # split into chunks of 4
           
 M = GF(2)
+
+# 16 διαφορετικά μηνύματα(2^4)
+# 128 διαφορετικοί vectors(2^7)
 
 G = matrix(M, [                # generator matrix
           [1,0,0,0,1,1,0,1],
@@ -64,7 +81,7 @@ def decode(r):
         print(f"Decoded {corrected}")
         print(f"Original Message: {corrected[:4]}") 
     elif s in error_syndrome_table:
-        print("Error Detected")  
+        print("Error Detected")    
         print(f"Corrected {corrected}")
         print(f"Original Message: {corrected[:4]}")
     return corrected[:4]
@@ -84,8 +101,20 @@ def add_error(codeword, percentage):
 for i, chunk in enumerate(chunks):
     bits = [int(b[0]) for b in chunk]
     print(f"Before encoding {chunk}")
-    codeword = encode(bits)
+          
+    codeword = encode(bits) #generator matrix
     print(f"Codeword: {codeword}")
-    received = add_error(codeword, 30)
-    print(f"Received: {received}")
+          
+    received = add_error(codeword, 20) # add error
+    
+    encoded = base64.b64encode(received.encode("ascii")) #encode with base64
+    print (f"Encoded with base64 {encoded}")
+    
+    decoded = base64.b64decode(encoded).decode("ascii") #decode with base64
+    print(f"Decoded with base64 {decoded}")
+          
+    print(received == encoded) 
+    received = encoded
+          
+    print(f"Received: {received}") #parity check matrix
     decode(received)
