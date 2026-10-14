@@ -12,9 +12,6 @@ chunks = [codeword[i:i+4] for i in range(0, len(codeword), 4)]   # split into ch
           
 M = GF(2)
 
-# 16 διαφορετικά μηνύματα(2^4)
-# 128 διαφορετικοί vectors(2^7)
-
 G = matrix(M, [                # generator matrix
           [1,0,0,0,1,1,0,1],
           [0,1,0,0,1,0,1,1],
@@ -54,28 +51,24 @@ error_syndrome_table = build_error_syndrome_table()
 
 
 def decode(r):
-  r = vector(M, r)
-  s = tuple(error_syndrome(r))
-  if all (v == 0 for v in s):          # αν = 000 σημάινει οτι δεν έχει σφάλματα
-    print("No errors")
-    corrected = r
-    print(f"Decoded {corrected}")
-    print(f"Original Message: {corrected[:4]}")
-  elif s in error_syndrome_table: # δε ξερουμε ποσα errors υπαρχουν. Αφου ειναι τεχνητα errors μπορουμε απλα να υπολογισουμε ποσα ειναι απο την add_error function
-    print(r[2])
-    print("Error Detected")
-    asoi = 0
-    for i in range(len(r)):
-        if r[0] == 1:
-            asoi += 1
-        return asoi
-    print (asoi)
-    corrected = r - error_syndrome_table[s]  # XOR    
-    print(f"Corrected {corrected}")
-    print(f"Original Message: {corrected[:4]}")
-  else:
-    print("More than 1 errors. Can't be corrected")
-    return None
+    r = vector(M, r)
+    s = tuple(error_syndrome(r))
+    if s not in error_syndrome_table: 
+        print("More than 1 errors. Can't be corrected")
+        return None
+    e = error_syndrome_table[s]
+    corrected = r - e
+    
+    if all (v == 0 for v in s):          # αν = 000 σημάινει οτι δεν έχει σφάλματα
+        print("No errors")
+        print(f"Decoded {corrected}")
+        print(f"Original Message: {corrected[:4]}") 
+    elif s in error_syndrome_table:
+        print("Error Detected")  
+        print(f"Corrected {corrected}")
+        print(f"Original Message: {corrected[:4]}")
+    return corrected[:4]
+
 
 
 
@@ -93,8 +86,6 @@ for i, chunk in enumerate(chunks):
     print(f"Before encoding {chunk}")
     codeword = encode(bits)
     print(f"Codeword: {codeword}")
-    received = add_error(codeword, 20)
+    received = add_error(codeword, 30)
     print(f"Received: {received}")
     decode(received)
-    
-    
