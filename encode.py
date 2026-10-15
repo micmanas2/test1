@@ -49,3 +49,17 @@ def add_error(codeword, percentage):
     for pos in positions:
         received[pos] += 1
     return received
+
+
+
+for i, chunk in enumerate(chunks):
+    bits = [int(b[0]) for b in chunk]
+    #print(f"Before encoding {chunk}")
+          
+    codeword = encode(bits) #encode with generator matrix
+    #print(f"Codeword: {codeword}")
+          
+    received = add_error(codeword, 20) # add error
+    
+    received = ''.join(str(int(b)) for b in received)
+    encoded = base64.b64encode(received.encode("ascii")
