@@ -9,7 +9,7 @@ with open("kostas.bin", "rb") as bits:
     data = bits.read()
 
 
-codeword2 = ''.join(format(b, '08b') for b i data) #from bytes to bits
+codeword2 = ''.join(format(b, '08b') for b in data) #from bytes to bits
 
 
 
