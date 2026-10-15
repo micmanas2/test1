@@ -66,3 +66,4 @@ for i, chunk in enumerate(chunks):
 
 with open("codeword.txt", "w") as c:
     c.write(encoded)
+# πρεπει να σταλθει και το original_length 
