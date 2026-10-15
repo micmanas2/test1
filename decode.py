@@ -54,3 +54,26 @@ def decode(r):
        # print(f"Corrected {corrected}")
       #  print(f"Original Message: {corrected[:4]}")
     return corrected[:4]
+
+
+
+
+reconstructed = ""
+for i, chunk in enumerate(chunks):
+    bits = [int(b[0]) for b in chunk]         
+    decoded = base64.b64decode(encoded).decode("ascii") 
+    og = decode(decoded)
+    og = ''.join(str(int(bit)) for bit in og)
+    reconstructed += og
+     
+
+final = reconstructed[:original_length]
+print("Final Result")
+print(final == codeword2)
+
+
+
+to_bytes = bytes(int(final[i:i+8],  2) for i in range(0, len(final), 8))
+
+with open("kostas2", "wb") as bits:
+    bits.write(to_bytes)
