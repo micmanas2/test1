@@ -63,3 +63,6 @@ for i, chunk in enumerate(chunks):
     
     received = ''.join(str(int(b)) for b in received)
     encoded = base64.b64encode(received.encode("ascii")
+
+with open("codeword.txt", "w") as c:
+    c.write(encoded)
