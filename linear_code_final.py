@@ -3,8 +3,23 @@ from sage.all import *
 import base64
 
 
+
+#arxeio tou kosta
+with open("kostas.bin", "rb") as bits:
+    data = bits.read()
+
+
+codeword2 = ''.join(format(b, '08b') for b i data) #from bytes to bits
+
+
+
+
+#13811
+#21000
 #codeword = ("0011")
-codeword2 = ("0101010011011011")*5000 # τα bits που θα παρω απο τον κωστα
+#codeword2 = ("0101010011011011")*5 #τιμη για δοκιμες
+
+
 original_length = len(codeword2)
 codeword = codeword2
 
@@ -71,8 +86,8 @@ def decode(r):
         print(f"Original Message: {corrected[:4]}") 
     elif s in error_syndrome_table:
         print("Error Detected")    
-        print(f"Corrected {corrected}")
-        print(f"Original Message: {corrected[:4]}")
+       # print(f"Corrected {corrected}")
+      #  print(f"Original Message: {corrected[:4]}")
     return corrected[:4]
 
 
@@ -92,33 +107,44 @@ def add_error(codeword, percentage):
 reconstructed = ""
 for i, chunk in enumerate(chunks):
     bits = [int(b[0]) for b in chunk]
-    print(f"Before encoding {chunk}")
+    #print(f"Before encoding {chunk}")
           
     codeword = encode(bits) #encode with generator matrix
-    print(f"Codeword: {codeword}")
+    #print(f"Codeword: {codeword}")
           
     received = add_error(codeword, 20) # add error
     
     received = ''.join(str(int(b)) for b in received)
     encoded = base64.b64encode(received.encode("ascii")) #encode with base64
-    print (f"Encoded with base64 {encoded}")
+    #print (f"Encoded with base64 {encoded}")
     
    ### λγκ τα παραπανω θα μπουν στη μερια του αποστολεα               
    ### και τα παρακατω στη μερια του παραληπτη. δν ειμαι και σιγουρος ομως :)
          
     decoded = base64.b64decode(encoded).decode("ascii") #decode with base64
-    print(f"Decoded with base64 {decoded}")
+    #print(f"Decoded with base64 {decoded}")
           
           
-    print(f"Received: {decoded}") #decode with parity check matrix
+    #print(f"Received: {decoded}") #decode with parity check matrix
     og = decode(decoded)
     og = ''.join(str(int(bit)) for bit in og)
-    print(og == chunk)
+    #print(og == chunk)
     reconstructed += og
      
 print("Final Result")
-print(reconstructed[:original_length] == codeword2)
+final = reconstructed[:original_length]
+print(final == codeword2)
+
+
+
+to_bytes = bytes(int(final[i:i+8],  2) for i in range(0, len(final), 8))
+
+with open("kostas2", "wb") as bits:
+    bits.write(to_bytes)
+
     
+    
+
     
     
     
