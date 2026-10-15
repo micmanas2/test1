@@ -40,3 +40,12 @@ G = matrix(M, [                # generator matrix
           [0,0,1,0,0,1,1,1],
           [0,0,0,1,1,1,1,0]
           ])  
+
+
+def add_error(codeword, percentage):
+    bits_to_flip = int(len(codeword) * percentage / 100)
+    positions = rnd.sample(range(len(codeword)), bits_to_flip)
+    received = vector(M, codeword)
+    for pos in positions:
+        received[pos] += 1
+    return received
