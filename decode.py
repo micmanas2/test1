@@ -6,6 +6,7 @@ with open("encoded.txt", "r") as c:
 
 decoded = base64.b64decode(encoded).decode("ascii")
 
+chunks = [decoded[i:i+8] for i in range(0, len(decoded), 8)] 
 
 M = GF(2)
 
